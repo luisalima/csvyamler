@@ -9,7 +9,7 @@ class YamlToCsv
   attr_reader :input_path, :languages, :all_yamls, :outfile
   attr_writer :yaml_structure
 
-  def initialize(input_path='in', languages=%i(en nl), outfile='bla.csv')
+  def initialize(input_path='in', languages=%i(en nl), outfile='translations.csv')
     @input_path = input_path; @languages = languages
     @all_yamls = {}
     @outfile = outfile
@@ -46,7 +46,10 @@ class YamlToCsv
   def fetch_record_from_path(path, hash, language)
     pathlets = path.split('.')
     pathlets = [language.to_s] + pathlets[2..-1]
-    pathlets.each { |pathlet| hash = hash[pathlet] }
+    pathlets.each do |pathlet|
+      return "" unless hash
+      hash = hash[pathlet]
+    end
     "\"#{hash}\""
   end
 
@@ -79,14 +82,16 @@ class YamlToCsv
   end
 
   def read_filenames
-    filenames = Dir.entries(input_path).select {|entry| entry =~ /.yml\z/}.inject([]) {|accum, entry| filename = entry.match(/(.+).(en|nl).yml\z/)[1]; accum += [filename] }
+    filenames = Dir.entries(input_path).select {|entry| entry =~ /.yml\z/}.inject([]) {|accum, entry| filename = entry.match(/(.+)\.(.+).yml\z/)[1]; accum += [filename] }
     filenames = Set.new(filenames).to_a
   end
 
   def read_yaml_structure_from_file(filename, language)
     full_path = "#{input_path}/#{filename}.#{language}.yml"
-    yaml = File.open(full_path).read if Pathname(full_path).exist?
-    YAML.load(yaml)
+    if Pathname(full_path).exist?
+      yaml = File.open(full_path).read
+      YAML.load(yaml)
+    end
   end
 
 end
