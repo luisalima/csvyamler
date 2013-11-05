@@ -117,5 +117,5 @@ opt.parse!
 if options == {}
   puts opt
 else
-  YamlToCsv.new(outfile: options[:output_file]).run
+  YamlToCsv.new(outfile: options.fetch(:output_file, 'translations.csv')).run
 end

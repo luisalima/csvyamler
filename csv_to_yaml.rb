@@ -1,15 +1,18 @@
+#!/usr/bin/env ruby
+
 require 'yaml'
 require 'pry'
 require 'set'
 require 'pathname'
 require 'csv'
+require 'optparse'
 
 class CsvToYaml
 
   attr_reader :languages, :outpath
 
-  def initialize(folder='.', infile='bla.csv', outpath='out')
-    @folder = folder; @infile = infile; @yaml_files = {}; @outpath = outpath
+  def initialize(infile: 'translations.csv', outpath: 'out')
+    @infile = infile; @yaml_files = {}; @outpath = outpath
     Dir.mkdir(@outpath) unless File.exists? File.expand_path(outpath)
   end
 
@@ -73,4 +76,28 @@ class CsvToYaml
 
 end
 
-CsvToYaml.new.run
+options = {}
+opt = OptionParser.new do |opts|
+  opts.banner = 'Usage: csv_to_yaml.rb [options]'
+  opts.on('-i', '--input [FILE]', 'Specify input file (default: translations.csv)') do |input_file|
+    options[:input_file] = input_file
+    p input_file
+  end
+  opts.on('-o', '--output [FOLDER]', 'Specify output folder path (default: ./out). Will be created if unexistent.') do |output_folder|
+    options[:output_folder] = output_folder
+    p output_folder
+  end
+  opts.on('-h', '--help', 'Show this message') do
+    puts opts
+    exit
+  end
+end
+
+opt.parse!
+
+if options == {}
+  puts opt
+else
+  CsvToYaml.new(infile: options.fetch(:input_file, 'translations.csv'),
+                outpath: options.fetch(:output_folder, './out')).run
+end
