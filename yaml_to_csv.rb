@@ -1,15 +1,18 @@
+#!/usr/bin/env ruby
+
 require 'yaml'
 require 'pry'
 require 'set'
 require 'pathname'
 require 'csv'
+require 'optparse'
 
 class YamlToCsv
 
   attr_reader :input_path, :languages, :all_yamls, :outfile
   attr_writer :yaml_structure
 
-  def initialize(input_path='in', languages=%i(en nl), outfile='translations.csv')
+  def initialize(input_path: 'in', languages: %i(en nl), outfile: 'translations.csv')
     @input_path = input_path; @languages = languages
     @all_yamls = {}
     @outfile = outfile
@@ -20,6 +23,7 @@ class YamlToCsv
     write_to_csv("#path", "parent", "level", *@languages)
     filenames = read_filenames
     filenames.each do |filename|
+      puts "Processing [#{filename}]"
       write_to_csv(filename)
       languages.each { |language| all_yamls[language] = read_yaml_structure_from_file(filename, language)}
       depth_first_traversal(all_yamls[:en])
@@ -96,4 +100,22 @@ class YamlToCsv
 
 end
 
-YamlToCsv.new.run
+options = {}
+opt = OptionParser.new do |opts|
+  opts.banner = 'Usage: yaml_to_csv.rb [options]'
+  opts.on('-o', '--output [FILE]', 'Specify output file (default: translations.csv)') do |output_file|
+    options[:output_file] = output_file
+  end
+  opts.on('-h', '--help', 'Show this message') do
+    puts opts
+    exit
+  end
+end
+
+opt.parse!
+
+if options == {}
+  puts opt
+else
+  YamlToCsv.new(outfile: options[:output_file]).run
+end
