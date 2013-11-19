@@ -9,7 +9,7 @@ require 'optparse'
 
 class YamlToCsv
 
-  attr_reader :input_path, :languages, :all_yamls, :outfile
+  attr_reader :input_path, :languages, :all_yamls, :outfile, :fixed_row_size
   attr_writer :yaml_structure
 
   def initialize(input_path: 'in', languages: %i(en nl de), outfile: 'translations.csv')
@@ -17,6 +17,7 @@ class YamlToCsv
     @all_yamls = {}
     @outfile = outfile
     @file = csv_file
+    @fixed_row_size = languages.size + 3
   end
 
   def run
@@ -43,6 +44,7 @@ class YamlToCsv
   end
 
   def write_to_csv(*row)
+    row += [nil]*(fixed_row_size-row.size)
     csv_file << row
   end
 
