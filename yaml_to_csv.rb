@@ -46,15 +46,19 @@ class YamlToCsv
     csv_file << (Array.new) << row
   end
 
+  def empty_string
+    "\"\""
+  end
+
   # fetch a record from a hash based on a path
   def fetch_record_from_path(path, hash, language)
     pathlets = path.split('.')
     pathlets = [language.to_s] + pathlets[2..-1]
     pathlets.each do |pathlet|
-      return "" unless hash
+      return empty_string unless hash
       hash = hash[pathlet]
     end
-    hash.inspect
+    hash ? hash.inspect : empty_string
   end
 
   def remove_language_from(path)
