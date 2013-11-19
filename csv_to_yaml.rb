@@ -60,7 +60,7 @@ class CsvToYaml
   end
 
   def new_filename(path)
-    if path && path[0] != '.' && path[0] !=  '#'
+    if path && path[0] != '.' && path[0] !=  '$'
       path
     else
       nil

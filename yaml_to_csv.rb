@@ -21,7 +21,7 @@ class YamlToCsv
   end
 
   def run
-    write_to_csv("#path", "parent", "level", *@languages)
+    write_to_csv("$path", "parent", "level", *@languages)
     filenames = read_filenames
     filenames.each do |filename|
       puts "Processing [#{filename}]"
