@@ -43,7 +43,7 @@ class YamlToCsv
   end
 
   def write_to_csv(*row)
-    csv_file << (Array.new) << row
+    csv_file << row
   end
 
   def empty_string
