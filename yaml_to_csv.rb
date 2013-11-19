@@ -12,7 +12,7 @@ class YamlToCsv
   attr_reader :input_path, :languages, :all_yamls, :outfile
   attr_writer :yaml_structure
 
-  def initialize(input_path: 'in', languages: %i(en nl), outfile: 'translations.csv')
+  def initialize(input_path: 'in', languages: %i(en nl de), outfile: 'translations.csv')
     @input_path = input_path; @languages = languages
     @all_yamls = {}
     @outfile = outfile
@@ -54,7 +54,7 @@ class YamlToCsv
       return "" unless hash
       hash = hash[pathlet]
     end
-    "\"#{hash}\""
+    hash.inspect
   end
 
   def remove_language_from(path)

@@ -21,7 +21,7 @@ class CsvToYaml
   end
 
   def languages
-    @languages ||= %w(en nl)
+    @languages ||= %w(en nl de)
   end
 
   def yaml_file_for(filename, language)
@@ -36,12 +36,12 @@ class CsvToYaml
   end
 
   def get_index_for(language)
-    indexes = {en: 0, nl: 1}
+    indexes = {en: 0, nl: 1, de: 3}
     indexes[language.to_sym]
   end
 
   def read_all
-    filename = 'tmp'
+    filename = ''
     CSV.foreach(@infile, 'r') do |row|
       path = row[0]; parent=row[1]; level=row[2].to_i; values = row[3..-1]
       if(new_filename(path))
@@ -81,11 +81,9 @@ opt = OptionParser.new do |opts|
   opts.banner = 'Usage: csv_to_yaml.rb [options]'
   opts.on('-i', '--input [FILE]', 'Specify input file (default: translations.csv)') do |input_file|
     options[:input_file] = input_file
-    p input_file
   end
   opts.on('-o', '--output [FOLDER]', 'Specify output folder path (default: ./out). Will be created if unexistent.') do |output_folder|
     options[:output_folder] = output_folder
-    p output_folder
   end
   opts.on('-h', '--help', 'Show this message') do
     puts opts
