@@ -36,7 +36,7 @@ class CsvToYaml
   end
 
   def get_index_for(language)
-    indexes = {en: 0, nl: 1, de: 3}
+    indexes = {en: 0, nl: 1, de: 2}
     indexes[language.to_sym]
   end
 
