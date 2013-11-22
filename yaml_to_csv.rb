@@ -57,8 +57,11 @@ class YamlToCsv
     pathlets = path.split('.')
     pathlets = [language.to_s] + pathlets[2..-1]
     pathlets.each do |pathlet|
-      return empty_string unless hash
-      hash = hash[pathlet]
+      if hash
+        hash = hash[pathlet]
+      else
+        break
+      end
     end
     hash ? hash.inspect : empty_string
   end
