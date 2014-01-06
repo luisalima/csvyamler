@@ -17,5 +17,6 @@ namespace :translations do
   end
 
   task :convert_from_yml do
+    system! "source ./set_env.sh && #{SCRIPT_LOCATION}/yaml_to_csv.rb -i $LOCALES_PATH -o $CSV_PATH"
   end
 end

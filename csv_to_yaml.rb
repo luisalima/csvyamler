@@ -44,12 +44,14 @@ class CsvToYaml
     filename = ''
     CSV.foreach(@infile, 'r') do |row|
       path = row[0]; parent=row[1]; level=row[2].to_i; values = row[3..-1]
+      next if path && (path[0] == '$' || path[0] == '-')
+
       if(new_filename(path))
         filename = new_filename(path)
-        p "Creating [#{filename}]..."
+        puts "Creating [#{filename}]..."
       else
         languages.each do |language|
-          parent = language if parent == 'en'
+          parent = language if languages.include? parent
           value = values[get_index_for(language)] if values
           s = create_yaml_for_path(".#{language.to_s}#{path}", parent, level, value)
           yaml_file_for(filename, language).write(s)
